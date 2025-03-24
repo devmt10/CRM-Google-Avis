@@ -1,11 +1,8 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-// A mettre à jour selon les dispositions d'Alexandre
-
 function HomePage() {
-  const { businessId } = useParams(); // Récupère l'ID du business à partir de l'URL, App.js mise à jour
+  const { businessId } = useParams();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [answers, setAnswers] = useState({
@@ -18,21 +15,26 @@ function HomePage() {
   const handleRating = (star) => {
     setRating(star);
   };
-//Vérifier rédirection à la page du business
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (rating === 5) {
+    if (rating >= 4) {
+      // Redirection directe vers Google Reviews pour 4 et 5 étoiles
       const googleReviewUrl = `https://g.page/r/${businessId}/review?text=${encodeURIComponent(comment)}`;
       window.location.href = googleReviewUrl;
-    } else if (rating < 4 && rating > 0) {
+    } else if (rating > 0) {
+      // Navigation vers FeedbackForm pour 1-3 étoiles
       navigate('/feedback', { state: { rating, comment, answers } });
-    } else {
-      alert('Merci pour votre évaluation !');
     }
+    // Pas d’alerte, rien si rating est 0 (pas encore sélectionné)
   };
 
   const handleAdminAccess = () => {
     navigate('/admin');
+  };
+
+  const handleKingdomAdsAccess = () => {
+    navigate('/kingdomads');
   };
 
   return (
@@ -109,18 +111,30 @@ function HomePage() {
             />
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button et Accès */}
           <div className="flex justify-between items-center">
-            <button type="submit" className="bg-google-blue text-white p-2 rounded hover:bg-google-dark-blue">
+            <button
+              type="submit"
+              className="bg-google-blue text-white p-2 rounded hover:bg-google-dark-blue"
+            >
               Soumettre
             </button>
-            <button
-              type="button"
-              onClick={handleAdminAccess}
-              className="text-google-dark-gray hover:text-google-blue"
-            >
-              Accès Admin
-            </button>
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={handleAdminAccess}
+                className="text-google-dark-gray hover:text-google-blue underline"
+              >
+                Accès Admin
+              </button>
+              <button
+                type="button"
+                onClick={handleKingdomAdsAccess}
+                className="text-google-dark-gray hover:text-google-blue underline"
+              >
+                Accès Kingdom Ads
+              </button>
+            </div>
           </div>
         </form>
       </div>

@@ -1,15 +1,16 @@
 import React from 'react';
-import ReviewGraph, { ReviewGraph2 } from './ReviewGraph'; // Import both graphs
-import * as XLSX from 'xlsx'; // Excel export library
-import jsPDF from 'jspdf'; // PDF export library
+import { useNavigate } from 'react-router-dom'; // Ajouté
+import ReviewGraph, { ReviewGraph2 } from './ReviewGraph';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
 
 function MainContent() {
+  const navigate = useNavigate(); // Ajouté
   const recentReviews = [
     { id: 1, stars: 5, text: 'Service excellent !', date: '2025-03-10' },
     { id: 2, stars: 2, text: 'Trop lent.', date: '2025-03-12' },
   ];
 
-  // Static stats synced with ReviewGraph (January data)
   const stats = {
     fiveStar: 12,
     fourStar: 2,
@@ -108,7 +109,6 @@ function MainContent() {
     <main className="flex-1 p-6 bg-gray-50">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Tableau de Bord Google Avis</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Recent Reviews */}
         <div className="lg:col-span-1 p-4 bg-gray-100 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-blue-600 mb-4">Derniers Avis</h2>
           {recentReviews.map((review) => (
@@ -124,11 +124,16 @@ function MainContent() {
               </button>
             </div>
           ))}
+          {/* Bouton pour donner un avis */}
+          <button
+            onClick={() => navigate('/feedback')}
+            className="mt-4 text-blue-600 hover:text-yellow-500 underline text-sm font-semibold"
+          >
+            Donner un Avis
+          </button>
         </div>
 
-        {/* Right: Graphs and Exports */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Summary Stats */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Résumé des Statistiques</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -143,25 +148,22 @@ function MainContent() {
             </div>
           </div>
 
-          {/* Monthly Graph */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Statistiques Mensuelles</h2>
             <ReviewGraph />
           </div>
 
-          {/* Yearly Graph */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Statistiques Annuelles</h2>
             <ReviewGraph2 />
           </div>
 
-          {/* Export Buttons with Inline Google Colors */}
           <div className="space-y-4">
             <button
               onClick={() => handleExportStats('xlsx')}
               style={{
                 width: '100%',
-                backgroundColor: '#34A853', // Google Green
+                backgroundColor: '#34A853',
                 color: '#FFFFFF',
                 padding: '12px 24px',
                 borderRadius: '6px',
@@ -174,7 +176,7 @@ function MainContent() {
                 cursor: 'pointer',
                 transition: 'background-color 0.2s',
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#2F9747')} // Darker Green
+              onMouseOver={(e) => (e.target.style.backgroundColor = '#2F9747')}
               onMouseOut={(e) => (e.target.style.backgroundColor = '#34A853')}
             >
               Exporter en Excel (.xlsx)
@@ -183,7 +185,7 @@ function MainContent() {
               onClick={() => handleExportStats('csv')}
               style={{
                 width: '100%',
-                backgroundColor: '#4285F4', // Google Blue
+                backgroundColor: '#4285F4',
                 color: '#FFFFFF',
                 padding: '12px 24px',
                 borderRadius: '6px',
@@ -196,7 +198,7 @@ function MainContent() {
                 cursor: 'pointer',
                 transition: 'background-color 0.2s',
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#3A78D8')} // Darker Blue
+              onMouseOver={(e) => (e.target.style.backgroundColor = '#3A78D8')}
               onMouseOut={(e) => (e.target.style.backgroundColor = '#4285F4')}
             >
               Exporter en Excel CSV (.csv) - Mac Compatible
@@ -205,7 +207,7 @@ function MainContent() {
               onClick={() => handleExportStats('txt')}
               style={{
                 width: '100%',
-                backgroundColor: '#5F6368', // Google Gray
+                backgroundColor: '#5F6368',
                 color: '#FFFFFF',
                 padding: '12px 24px',
                 borderRadius: '6px',
@@ -218,7 +220,7 @@ function MainContent() {
                 cursor: 'pointer',
                 transition: 'background-color 0.2s',
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#54575C')} // Darker Gray
+              onMouseOver={(e) => (e.target.style.backgroundColor = '#54575C')}
               onMouseOut={(e) => (e.target.style.backgroundColor = '#5F6368')}
             >
               Exporter en Texte (.txt)
@@ -227,7 +229,7 @@ function MainContent() {
               onClick={() => handleExportStats('pdf')}
               style={{
                 width: '100%',
-                backgroundColor: '#EA4335', // Google Red
+                backgroundColor: '#EA4335',
                 color: '#FFFFFF',
                 padding: '12px 24px',
                 borderRadius: '6px',
@@ -240,7 +242,7 @@ function MainContent() {
                 cursor: 'pointer',
                 transition: 'background-color 0.2s',
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#D13A2D')} // Darker Red
+              onMouseOver={(e) => (e.target.style.backgroundColor = '#D13A2D')}
               onMouseOut={(e) => (e.target.style.backgroundColor = '#EA4335')}
             >
               Exporter en PDF (.pdf)

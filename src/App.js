@@ -5,6 +5,8 @@ import FeedbackForm from './components/FeedbackForm';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
+import SuperAdmin from './components/SuperAdmin';
+import Statistics from './components/Statistics';
 
 function App() {
   return (
@@ -21,7 +23,34 @@ function App() {
             </div>
           </div>
         } />
-        <Route path="/business/:businessId" element={<HomePage />} />  {/* Route dynamique pour récupérer l'ID du business */}
+        <Route path="/admin/:businessId" element={
+          <div className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex flex-1">
+              <Sidebar />
+              <MainContent />
+            </div>
+          </div>
+        } />
+        <Route path="/kingdomads" element={
+          <div className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex flex-1">
+              <Sidebar />
+              <SuperAdmin />
+            </div>
+          </div>
+        } />
+        <Route path="/kingdomads/statistics" element={
+          <div className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex flex-1">
+              <Sidebar />
+              <Statistics />
+            </div>
+          </div>
+        } />
+        <Route path="/business/:businessId" element={<HomePage />} />
       </Routes>
     </Router>
   );
