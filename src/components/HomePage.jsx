@@ -1,7 +1,11 @@
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
+// A mettre à jour selon les dispositions d'Alexandre
 
 function HomePage() {
+  const { businessId } = useParams(); // Récupère l'ID du business à partir de l'URL, App.js mise à jour
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [answers, setAnswers] = useState({
@@ -14,13 +18,13 @@ function HomePage() {
   const handleRating = (star) => {
     setRating(star);
   };
-
+//Vérifier rédirection à la page du business
   const handleSubmit = (e) => {
     e.preventDefault();
     if (rating === 5) {
-      const googleReviewUrl = `https://g.page/r/CcJJB_PqPRWwEBM/review?text=${encodeURIComponent(comment)}`;
+      const googleReviewUrl = `https://g.page/r/${businessId}/review?text=${encodeURIComponent(comment)}`;
       window.location.href = googleReviewUrl;
-    } else if (rating < 3 && rating > 0) {
+    } else if (rating < 4 && rating > 0) {
       navigate('/feedback', { state: { rating, comment, answers } });
     } else {
       alert('Merci pour votre évaluation !');
@@ -101,36 +105,24 @@ function HomePage() {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-blue"
-              placeholder="Dites-nous plus..."
-              rows="4"
+              placeholder="Ajoutez vos commentaires ici..."
             />
           </div>
 
-          {/* Google Avis Message */}
-          {rating === 5 && (
-            <p className="text-google-dark-gray mb-4">
-              Votre opinion sur RT Connecting nous intéresse. Publiez un avis sur notre fiche.
-            </p>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-google-blue text-white p-3 rounded-lg hover:bg-google-dark-gray transition-colors mb-4"
-          >
-            Envoyer l'Évaluation
-          </button>
+          {/* Submit Button */}
+          <div className="flex justify-between items-center">
+            <button type="submit" className="bg-google-blue text-white p-2 rounded hover:bg-google-dark-blue">
+              Soumettre
+            </button>
+            <button
+              type="button"
+              onClick={handleAdminAccess}
+              className="text-google-dark-gray hover:text-google-blue"
+            >
+              Accès Admin
+            </button>
+          </div>
         </form>
-
-        {/* Admin Link */}
-        <div className="text-center">
-          <button
-            onClick={handleAdminAccess}
-            className="text-google-blue hover:text-google-yellow transition-colors underline"
-          >
-            Accès Administrateur
-          </button>
-        </div>
       </div>
     </div>
   );

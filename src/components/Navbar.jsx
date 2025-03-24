@@ -1,3 +1,5 @@
+
+// A mettre à jour selon Alexandre disposition (demande Meditrust tableau de board)
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,4 +32,4 @@ function Navbar() {
   );
 }
 
-export default Navbar; // Ensure this is present
+export default Navbar;

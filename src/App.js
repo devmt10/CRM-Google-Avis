@@ -12,18 +12,16 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/feedback" element={<FeedbackForm />} />
-        <Route
-          path="/admin"
-          element={
-            <div className="flex flex-col h-screen">
-              <Navbar />
-              <div className="flex flex-1">
-                <Sidebar />
-                <MainContent />
-              </div>
+        <Route path="/admin" element={
+          <div className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex flex-1">
+              <Sidebar />
+              <MainContent />
             </div>
-          }
-        />
+          </div>
+        } />
+        <Route path="/business/:businessId" element={<HomePage />} />  {/* Route dynamique pour récupérer l'ID du business */}
       </Routes>
     </Router>
   );

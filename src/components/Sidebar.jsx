@@ -1,4 +1,5 @@
 import React from 'react';
+// A mettre à jour selon Alexandre disposition (demande Meditrust tableau de board)
 
 function Sidebar() {
   const handleAddReview = () => {
@@ -27,4 +28,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar; // Ensure this is present
+export default Sidebar;
