@@ -1,6 +1,37 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+const InputField = ({ label, value, onChange, placeholder, required }) => (
+  <div className="mb-6">
+    <label className="block text-google-dark-gray mb-2 font-semibold">{label}</label>
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
+      placeholder={placeholder}
+      required={required}
+    />
+  </div>
+);
+
+const SelectField = ({ label, value, onChange, options, required }) => (
+  <div className="mb-6">
+    <label className="block text-google-dark-gray mb-2 font-semibold">{label}</label>
+    <select
+      value={value}
+      onChange={onChange}
+      className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
+      required={required}
+    >
+      <option value="">Choisissez...</option>
+      {options.map((option) => (
+        <option key={option} value={option}>{option}</option>
+      ))}
+    </select>
+  </div>
+);
+
 function FeedbackForm() {
   const { state } = useLocation();
   const [rating, setRating] = useState(state?.rating || null);
@@ -12,9 +43,7 @@ function FeedbackForm() {
   });
   const navigate = useNavigate();
 
-  const handleRatingSelect = (selectedRating) => {
-    setRating(selectedRating);
-  };
+  const handleRatingSelect = (selectedRating) => setRating(selectedRating);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,15 +51,12 @@ function FeedbackForm() {
     console.log('Feedback soumis :', feedbackData);
 
     if (rating >= 4) {
-      // Générer un paragraphe pour Google Reviews (loggé, pas affiché)
       const googleReviewText = `J’ai bénéficié de ${details.service} avec ${details.personne}. ${
         details.satisfaction === 'oui' ? 'Tout s’est très bien passé' : 'Quelques petits ajustements possibles'
       }. ${details.recommandation === 'oui' ? 'Je recommande absolument !' : 'Je pourrais recommander.'}`;
       console.log('Texte pour Google Reviews :', googleReviewText);
-      // Redirection immédiate vers Google Reviews
-      window.location.href = 'https://www.google.com/search?q=leave+a+review'; // Remplace par ton URL
+      window.location.href = 'https://www.google.com/search?q=leave+a+review';
     } else {
-      // Retour à la page d’accueil
       navigate('/');
     }
   };
@@ -80,86 +106,48 @@ function FeedbackForm() {
             </p>
           </div>
 
-          <div className="mb-6">
-            <label className="block text-google-dark-gray mb-2 font-semibold">
-              Quelle service/prestation avez-vous bénéficié ?
-            </label>
-            <input
-              type="text"
-              value={details.service}
-              onChange={(e) => setDetails({ ...details, service: e.target.value })}
-              className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
-              placeholder="Ex : Consultation, Réparation..."
-              required
-            />
-          </div>
+          <InputField
+            label="Quelle service/prestation avez-vous bénéficié ?"
+            value={details.service}
+            onChange={(e) => setDetails({ ...details, service: e.target.value })}
+            placeholder="Ex : Consultation, Réparation..."
+            required
+          />
 
-          <div className="mb-6">
-            <label className="block text-google-dark-gray mb-2 font-semibold">
-              Avec qui s’est déroulé la prestation ?
-            </label>
-            <input
-              type="text"
-              value={details.personne}
-              onChange={(e) => setDetails({ ...details, personne: e.target.value })}
-              className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
-              placeholder="Nom ou rôle de la personne..."
-              required
-            />
-          </div>
+          <InputField
+            label="Avec qui s’est déroulé la prestation ?"
+            value={details.personne}
+            onChange={(e) => setDetails({ ...details, personne: e.target.value })}
+            placeholder="Nom ou rôle de la personne..."
+            required
+          />
 
           {rating >= 4 ? (
             <>
-              <div className="mb-6">
-                <label className="block text-google-dark-gray mb-2 font-semibold">
-                  Est-ce que tout s’est bien passé ?
-                </label>
-                <select
-                  value={details.satisfaction}
-                  onChange={(e) => setDetails({ ...details, satisfaction: e.target.value })}
-                  className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
-                  required
-                >
-                  <option value="">Choisissez...</option>
-                  <option value="oui">Oui</option>
-                  <option value="non">Non</option>
-                </select>
-              </div>
+              <SelectField
+                label="Est-ce que tout s’est bien passé ?"
+                value={details.satisfaction}
+                onChange={(e) => setDetails({ ...details, satisfaction: e.target.value })}
+                options={['oui', 'non']}
+                required
+              />
 
-              <div className="mb-6">
-                <label className="block text-google-dark-gray mb-2 font-semibold">
-                  Nous recommanderiez-vous à votre entourage ?
-                </label>
-                <select
-                  value={details.recommandation}
-                  onChange={(e) => setDetails({ ...details, recommandation: e.target.value })}
-                  className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
-                  required
-                >
-                  <option value="">Choisissez...</option>
-                  <option value="oui">Oui</option>
-                  <option value="non">Non</option>
-                </select>
-              </div>
+              <SelectField
+                label="Nous recommanderiez-vous à votre entourage ?"
+                value={details.recommandation}
+                onChange={(e) => setDetails({ ...details, recommandation: e.target.value })}
+                options={['oui', 'non']}
+                required
+              />
             </>
           ) : (
-            <>
-              <div className="mb-6">
-                <label className="block text-google-dark-gray mb-2 font-semibold">
-                  Comment souhaiteriez-vous qu’on améliore notre prestation ? (Notre but est que vous soyez 100% satisfait)
-                </label>
-                <textarea
-                  value={details.recommandation}
-                  onChange={(e) => setDetails({ ...details, recommandation: e.target.value })}
-                  className="w-full p-2 border border-google-gray rounded focus:outline-none focus:ring-2 focus:ring-google-red"
-                  placeholder="Vos suggestions..."
-                  rows="4"
-                  required
-                />
-              </div>
-
-
-            </>
+            <InputField
+              label="Comment souhaiteriez-vous qu’on améliore notre prestation ? (Notre but est que vous soyez 100% satisfait)"
+              value={details.recommandation}
+              onChange={(e) => setDetails({ ...details, recommandation: e.target.value })}
+              placeholder="Vos suggestions..."
+              required
+            />
           )}
 
           <button

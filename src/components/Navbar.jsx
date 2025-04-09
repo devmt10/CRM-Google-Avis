@@ -1,5 +1,3 @@
-
-// A mettre à jour selon Alexandre disposition (demande Meditrust tableau de board)
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
