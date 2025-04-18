@@ -1,16 +1,19 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Ajouté
-import ReviewGraph, { ReviewGraph2 } from './ReviewGraph';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
+import { useNavigate } from 'react-router-dom'; // Ajouté pour navigation
+import ReviewGraph, { ReviewGraph2 } from './ReviewGraph'; // Composants de graphiques
+import * as XLSX from 'xlsx'; // Pour l'exportation Excel/CSV
+import jsPDF from 'jspdf'; // Pour l'exportation PDF
 
 function MainContent() {
-  const navigate = useNavigate(); // Ajouté
+  const navigate = useNavigate(); // Navigation pour naviguer entre les routes
+
+  // Avis récents affichés sur le tableau de bord
   const recentReviews = [
     { id: 1, stars: 5, text: 'Service excellent !', date: '2025-03-10' },
     { id: 2, stars: 2, text: 'Trop lent.', date: '2025-03-12' },
   ];
 
+  // Statistiques sur les avis
   const stats = {
     fiveStar: 12,
     fourStar: 2,
@@ -20,19 +23,26 @@ function MainContent() {
     total: 23,
   };
 
+  // Calcul de la note moyenne à partir des statistiques
   const averageRating = (
-    (stats.fiveStar * 5 + stats.fourStar * 4 + stats.threeStar * 3 + stats.twoStar * 2 + stats.oneStar * 1) /
+    (stats.fiveStar * 5 +
+      stats.fourStar * 4 +
+      stats.threeStar * 3 +
+      stats.twoStar * 2 +
+      stats.oneStar * 1) /
     stats.total
   ).toFixed(1);
 
+  // Réponse à un avis sélectionné
   const handleRespond = (reviewId) => {
     const response = prompt('Entrez votre réponse :');
     if (response) alert(`Réponse envoyée pour l’avis ${reviewId} : ${response}`);
   };
 
+  // Gestion de l'exportation des statistiques dans différents formats
   const handleExportStats = (format) => {
     switch (format) {
-      case 'xlsx':
+      case 'xlsx': // Exportation au format Excel (.xlsx)
         const xlsxData = [
           ['Catégorie', 'Valeur'],
           ['Avis 5 étoiles', stats.fiveStar],
@@ -49,7 +59,7 @@ function MainContent() {
         XLSX.writeFile(xlsxBook, 'statistiques.xlsx');
         break;
 
-      case 'csv':
+      case 'csv': // Exportation au format CSV (.csv)
         const csvData = [
           ['Catégorie', 'Valeur'],
           ['Avis 5 étoiles', stats.fiveStar],
@@ -64,7 +74,7 @@ function MainContent() {
         XLSX.writeFile(csvSheet, 'statistiques.csv', { bookType: 'csv' });
         break;
 
-      case 'txt':
+      case 'txt': // Exportation au format Texte (.txt)
         const txtContent = `
           Statistiques des Avis Google (Mensuel - Janvier)
           --------------------------------------------
@@ -85,7 +95,7 @@ function MainContent() {
         URL.revokeObjectURL(txtUrl);
         break;
 
-      case 'pdf':
+      case 'pdf': // Exportation au format PDF (.pdf)
         const doc = new jsPDF();
         doc.setFontSize(16);
         doc.text('Statistiques des Avis Google (Mensuel - Janvier)', 10, 10);
@@ -108,7 +118,10 @@ function MainContent() {
   return (
     <main className="flex-1 p-6 bg-gray-50">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Tableau de Bord Google Avis</h1>
+
+      {/* Section principale avec des avis récents et des boutons d'export */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Section des avis récents */}
         <div className="lg:col-span-1 p-4 bg-gray-100 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-blue-600 mb-4">Derniers Avis</h2>
           {recentReviews.map((review) => (
@@ -124,7 +137,6 @@ function MainContent() {
               </button>
             </div>
           ))}
-          {/* Bouton pour donner un avis */}
           <button
             onClick={() => navigate('/feedback')}
             className="mt-4 text-blue-600 hover:text-yellow-500 underline text-sm font-semibold"
@@ -133,7 +145,9 @@ function MainContent() {
           </button>
         </div>
 
+        {/* Section des statistiques */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Résumé des statistiques */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Résumé des Statistiques</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -148,103 +162,30 @@ function MainContent() {
             </div>
           </div>
 
+          {/* Graphique des statistiques mensuelles */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Statistiques Mensuelles</h2>
             <ReviewGraph />
           </div>
 
+          {/* Graphique des statistiques annuelles */}
           <div className="p-4 bg-gray-100 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-blue-600 mb-4">Statistiques Annuelles</h2>
             <ReviewGraph2 />
           </div>
 
+          {/* Boutons pour l'exportation */}
           <div className="space-y-4">
-            <button
-              onClick={() => handleExportStats('xlsx')}
-              style={{
-                width: '100%',
-                backgroundColor: '#34A853',
-                color: '#FFFFFF',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                fontWeight: '500',
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#2F9747')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#34A853')}
-            >
+            <button onClick={() => handleExportStats('xlsx')} className="export-btn bg-green-600">
               Exporter en Excel (.xlsx)
             </button>
-            <button
-              onClick={() => handleExportStats('csv')}
-              style={{
-                width: '100%',
-                backgroundColor: '#4285F4',
-                color: '#FFFFFF',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                fontWeight: '500',
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#3A78D8')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#4285F4')}
-            >
-              Exporter en Excel CSV (.csv) - Mac Compatible
+            <button onClick={() => handleExportStats('csv')} className="export-btn bg-blue-600">
+              Exporter en CSV (.csv)
             </button>
-            <button
-              onClick={() => handleExportStats('txt')}
-              style={{
-                width: '100%',
-                backgroundColor: '#5F6368',
-                color: '#FFFFFF',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                fontWeight: '500',
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#54575C')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#5F6368')}
-            >
+            <button onClick={() => handleExportStats('txt')} className="export-btn bg-gray-600">
               Exporter en Texte (.txt)
             </button>
-            <button
-              onClick={() => handleExportStats('pdf')}
-              style={{
-                width: '100%',
-                backgroundColor: '#EA4335',
-                color: '#FFFFFF',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                fontWeight: '500',
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#D13A2D')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#EA4335')}
-            >
+            <button onClick={() => handleExportStats('pdf')} className="export-btn bg-red-600">
               Exporter en PDF (.pdf)
             </button>
           </div>

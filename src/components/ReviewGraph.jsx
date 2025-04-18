@@ -1,14 +1,12 @@
+// Importation de React et des composants nécessaires pour les graphiques
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-// A mettre à jour selon Alexandre disposition (demande Meditrust tableau de board)
-
-
-//  Chart.js composants
+// Enregistrement des composants nécessaires pour Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// Test, à remplacer avec les vrais données récuperées
+// Données fictives pour un exemple de graphique mensuel
 const monthlyStats = {
   labels: ['Janv', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin'],
   datasets: [
@@ -20,6 +18,7 @@ const monthlyStats = {
   ],
 };
 
+// Données fictives pour un exemple de graphique annuel
 const yearlyStats = {
   labels: ['2025', '2024', '2023', '2022', '2021', '2020'],
   datasets: [
@@ -31,6 +30,7 @@ const yearlyStats = {
   ],
 };
 
+// Options globales pour les graphiques
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false, // Permet au graphique de s’adapter à son conteneur
@@ -51,6 +51,7 @@ const chartOptions = {
   },
 };
 
+// Composant pour afficher les graphiques mensuels
 function ReviewGraph() {
   const options = {
     ...chartOptions,
@@ -67,6 +68,7 @@ function ReviewGraph() {
   );
 }
 
+// Composant pour afficher les graphiques annuels
 function ReviewGraph2() {
   const options = {
     ...chartOptions,
@@ -83,6 +85,6 @@ function ReviewGraph2() {
   );
 }
 
-// Export des deux composants
+// Export des deux composants graphiques
 export { ReviewGraph, ReviewGraph2 };
 export default ReviewGraph; // Maintien de l’export par défaut pour compatibilité

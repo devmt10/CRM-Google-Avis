@@ -40,18 +40,22 @@ def list_accounts_and_locations():
         # Utiliser l'API Account Management pour lister les comptes
         account_service = build('mybusinessaccountmanagement', 'v1', credentials=creds)
         accounts = account_service.accounts().list().execute()
+
+        # The block inside the for loop must be indented consistently
         for account in accounts.get('accounts', []):
             account_id = account['name'].split('/')[-1]
             print(f"Account ID: {account_id}, Name: {account.get('accountName', 'No name')}")
 
-            # Utiliser l'API Business Information pour lister les emplacements
-            location_service = build('mybusinessbusinessinformation', 'v1', credentials=creds)
-            locations = location_service.accounts().locations().list(parent=f'accounts/{account_id}').execute()
-            for location in locations.get('locations', []):
-                location_id = location['name'].split('/')[-1]
-                print(f"  Location ID: {location_id}, Name: {location.get('title', 'No title')}")
+      # Utiliser l'API Business Information pour lister les emplacements
+        location_service = build('mybusinessbusinessinformation', 'v1', credentials=creds)
+        locations = location_service.accounts().locations().list(parent=f'accounts/{account_id}').execute()
+        for location in locations.get('locations', []):
+            location_id = location['name'].split('/')[-1]
+            print(f"  Location ID: {location_id}, Name: {location.get('title', 'No title')}")
     except HttpError as error:
         print(f"Erreur lors de la liste des comptes/emplacements : {error}")
+
+
 
 if __name__ == '__main__':
     try:
